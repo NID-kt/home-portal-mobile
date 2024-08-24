@@ -34,6 +34,7 @@ import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.Icon
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.ui.graphics.vector.ImageVector
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +69,8 @@ fun MonitoringScreen(modifier: Modifier = Modifier) {
 
 @Composable
 fun TemperatureAndHumidityInfo() {
+    val iconColor = MaterialTheme.colorScheme.primary
+
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -81,23 +84,29 @@ fun TemperatureAndHumidityInfo() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(16.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Thermostat,
                     contentDescription = "Temperature",
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
+                    tint = iconColor
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 Text("30.5°C", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(16.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.WaterDrop,
                     contentDescription = "Humidity",
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
+                    tint = iconColor
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 Text("56%", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
         }
@@ -108,7 +117,9 @@ fun TemperatureAndHumidityInfo() {
 fun CameraSelectionChips() {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
         FilterChip(
             selected = true,
@@ -163,7 +174,7 @@ fun ControlCards() {
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-                Text("Daily record", fontWeight = FontWeight.Medium)
+                Text("Daily record", fontWeight = FontWeight.Medium, modifier = Modifier.padding(8.dp))
             }
         }
         ElevatedCard(
@@ -183,7 +194,7 @@ fun ControlCards() {
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-                Text("Personalize", fontWeight = FontWeight.Medium)
+                Text("Personalize", fontWeight = FontWeight.Medium, modifier = Modifier.padding(8.dp))
             }
         }
     }
@@ -284,5 +295,90 @@ val TriangleShape = GenericShape { size, _ ->
 fun SimpleRemoteControllerPreview() {
     MaterialTheme {
         RemoteController()
+    }
+}
+
+@Composable
+fun WearTemperatureAndHumidityInfo() {
+    val iconColor = MaterialTheme.colorScheme.primary
+    val backgroundColor = MaterialTheme.colorScheme.background
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor)
+            .padding(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            EnvironmentInfo(
+                icon = Icons.Default.Thermostat,
+                value = "30.5°C",
+                description = "Temperature",
+                iconColor = iconColor
+            )
+            EnvironmentInfo(
+                icon = Icons.Default.WaterDrop,
+                value = "56%",
+                description = "Humidity",
+                iconColor = iconColor
+            )
+        }
+    }
+}
+
+@Composable
+fun EnvironmentInfo(
+    icon: ImageVector,
+    value: String,
+    description: String,
+    iconColor: Color
+) {
+    val textColor = MaterialTheme.colorScheme.onBackground
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(4.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = description,
+            modifier = Modifier.size(24.dp),
+            tint = iconColor
+        )
+        Text(
+            text = value,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            color = textColor,
+            modifier = Modifier.padding(top = 4.dp)
+        )
+    }
+}
+
+class WearMainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            HomeportalmobileTheme {
+                WearApp()
+            }
+        }
+    }
+}
+
+@Composable
+fun WearApp() {
+    androidx.wear.compose.material.MaterialTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            WearTemperatureAndHumidityInfo()
+        }
     }
 }
